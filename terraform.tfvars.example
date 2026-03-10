@@ -1,0 +1,35 @@
+aws_region = "us-east-1"
+
+name_prefix = "atlantis"
+
+atlantis_repo_allowlist = "github.com/minha-org/*"
+github_user             = "atlantis-bot"
+
+# Secrets em texto puro no Secrets Manager:
+# - github_token_secret_arn: PAT ou token GitHub App compativel com Atlantis
+# - github_webhook_secret_arn: segredo do webhook
+github_token_secret_arn   = "arn:aws:secretsmanager:us-east-1:123456789012:secret:github-token-abc123"
+github_webhook_secret_arn = "arn:aws:secretsmanager:us-east-1:123456789012:secret:github-webhook-secret-def456"
+
+# Se quiser HTTPS direto no ALB, informe ARN de certificado ACM:
+# acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Guardrail IAM (anexar politica de bloqueio a identidades fora do Atlantis):
+enable_iam_guardrail_policy = true
+guardrail_role_names        = ["OrganizationAccountAccessRole"]
+guardrail_user_names        = []
+guardrail_group_names       = []
+
+# Enforcement global com SCP (AWS Organizations):
+enable_only_atlantis_scp = false
+# organization_target_id  = "123456789012"
+# break_glass_principal_arns = [
+#   "arn:aws:iam::123456789012:role/break-glass-admin"
+# ]
+
+tags = {
+  Environment = "prod"
+  Owner       = "platform"
+}
+
+
