@@ -1,0 +1,32 @@
+version: 3
+automerge: false
+parallel_plan: true
+parallel_apply: true
+
+projects:
+  - name: network-dev
+    dir: live/dev/network
+    workspace: default
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/dev/network/*.tf"
+        - "modules/network/**/*.tf"
+
+  - name: ecs-dev
+    dir: live/dev/ecs
+    workspace: default
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/dev/ecs/*.tf"
+        - "modules/ecs/**/*.tf"
+
+  - name: observability-dev
+    dir: live/dev/observability
+    workspace: default
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/dev/observability/*.tf"
+        - "modules/observability/**/*.tf"

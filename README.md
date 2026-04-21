@@ -50,6 +50,22 @@ terraform apply
 - Secret: mesmo valor do secret configurado em `github_webhook_secret_arn`
 - Eventos: Pull requests, Issue comments, Pull request reviews, Push
 
+## Exemplos de `atlantis.yaml`
+
+O repositorio agora inclui tres referencias praticas em `examples/`:
+
+- `examples/atlantis.yaml`: exemplo minimo para um unico projeto Terraform.
+- `examples/atlantis.monorepo.yaml`: modelo para mono-repo com multiplos diretorios e `autoplan` seletivo.
+- `examples/atlantis.multi-stack.yaml`: modelo para multiplos ambientes com requisitos extras de `apply` em producao.
+
+## Validacao automatizada
+
+Foi adicionada uma pipeline de CI para:
+
+- `terraform fmt -check -recursive`;
+- `terraform init -backend=false` e `terraform validate` da stack raiz;
+- verificacao da presenca dos exemplos de `atlantis.yaml`.
+
 ## Bloquear mudancas fora do Atlantis
 
 ### Opcao A: Politica IAM (conta sem Organizations)
@@ -98,4 +114,3 @@ Ao reutilizar ou derivar este material:
 
 **Tharlesson**  
 GitHub: https://github.com/tharlesson
-
