@@ -1,0 +1,42 @@
+name: terraform-ci
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.6.6"
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+
+      - name: Validate root stack
+        run: |
+          terraform init -backend=false -input=false -no-color
+          terraform validate -no-color
+
+      - name: Validate example manifests are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in \
+            examples/atlantis.yaml \
+            examples/atlantis.monorepo.yaml \
+            examples/atlantis.multi-stack.yaml; do
+            test -s "${file}"
+          done

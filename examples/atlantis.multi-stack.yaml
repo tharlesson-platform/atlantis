@@ -1,0 +1,47 @@
+version: 3
+automerge: false
+parallel_plan: true
+parallel_apply: false
+
+projects:
+  - name: vpc-dev
+    dir: live/dev/vpc
+    workspace: default
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/dev/vpc/*.tf"
+        - "modules/vpc/**/*.tf"
+
+  - name: vpc-stg
+    dir: live/stg/vpc
+    workspace: default
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/stg/vpc/*.tf"
+        - "modules/vpc/**/*.tf"
+
+  - name: vpc-prod
+    dir: live/prod/vpc
+    workspace: default
+    apply_requirements:
+      - approved
+      - mergeable
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/prod/vpc/*.tf"
+        - "modules/vpc/**/*.tf"
+
+  - name: security-baseline-prod
+    dir: live/prod/security-baseline
+    workspace: default
+    apply_requirements:
+      - approved
+      - mergeable
+    autoplan:
+      enabled: true
+      when_modified:
+        - "live/prod/security-baseline/*.tf"
+        - "modules/security-baseline/**/*.tf"
