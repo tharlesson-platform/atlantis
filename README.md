@@ -114,3 +114,33 @@ Ao reutilizar ou derivar este material:
 
 **Tharlesson**  
 GitHub: https://github.com/tharlesson
+
+## CI de validação local isolada
+
+`terraform-ci / terraform` e `guardrails` usam a label exclusiva
+`atlantis-run-${{ github.run_id }}`, com timeout de 20 minutos e `contents: read`.
+Push em `master`/`main` e PR são preservados. Checkout usa commit completo da
+action, head exato do PR ou SHA do push e `persist-credentials: false`.
+A admissão por repo/workflow/job/evento/SHA cabe ao controlador revisado separado;
+este patch não instala perfil nem autoriza código de fork ou qualquer SHA.
+
+Cada job exige marker em VM Linux ARM64 e nega mounts compartilhados,
+SSH agent, credenciais/perfis AWS e variáveis do gateway local de artifacts.
+Metadata AWS fica desativada; arquivos AWS de configuração/credenciais são nulos.
+Terraform 1.9.8 Linux ARM64 é baixado do endpoint oficial com SHA256 fixo
+verificado antes da extração e instalado apenas em RUNNER_TEMP, sem sudo.
+
+Permanecem idênticos o fmt recursivo, init da stack raiz com
+`-backend=false -input=false -no-color`, `validate -no-color` e a checagem dos
+três exemplos. Não há plan/apply/deploy nesta CI. Arquivos Terraform, IAM/ECS,
+exemplos de Atlantis e instruções existentes de operação não foram alterados.
+Os comandos de provisionamento documentados acima permanecem fora desta migração
+e não foram executados.
+
+Provas locais usam Terraform de mesma versão Darwin ARM64, verificado por SHA256,
+em cópia descartável com HOME, TF_DATA_DIR e cache próprios, sem herdar ambiente,
+credenciais, perfis ou SSO AWS; os arquivos AWS são /dev/null e metadata é desativada.
+São provas de fonte/validação: não comprovam infraestrutura cloud nem CI real Linux.
+Sem Docker/VM, API write, Root/runtime, commit/push ou alteração Code Quality.
+Antes de publicar, requer revisão independente Main; rollback nesta fase é não
+publicar/admitir esta fonte. Escopo: dois workflows e este README.
